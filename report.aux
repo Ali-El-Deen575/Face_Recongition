@@ -1,0 +1,73 @@
+\relax 
+\providecommand\hyper@newdestlabel[2]{}
+\providecommand\HyField@AuxAddToFields[1]{}
+\providecommand\HyField@AuxAddToCoFields[2]{}
+\@writefile{toc}{\contentsline {section}{\numberline {1}Introduction}{1}{section.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {2}Dataset and Experimental Setup}{1}{section.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.1}Data}{1}{subsection.2.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.2}Reproducibility}{1}{subsection.2.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.3}Hyperparameter Grid}{1}{subsection.2.3}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {3}Methodology}{2}{section.3}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.1}PCA Dimensionality Reduction}{2}{subsection.3.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {3.1.1}Mean-centering}{2}{subsubsection.3.1.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {3.1.2}Covariance and eigen-decomposition}{2}{subsubsection.3.1.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {3.1.3}Choosing the number of components using $\alpha $}{2}{subsubsection.3.1.3}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {3.1.4}Projection}{2}{subsubsection.3.1.4}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.2}K-Means Clustering}{2}{subsection.3.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.3}Gaussian Mixture Model (GMM)}{2}{subsection.3.3}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.4}From Clusters to Class Labels (for Accuracy/F1)}{3}{subsection.3.4}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {4}Evaluation Metrics}{3}{section.4}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.1}Accuracy}{3}{subsection.4.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.2}Confusion Matrix}{3}{subsection.4.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.3}Weighted F1-score}{3}{subsection.4.3}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {5}Results}{4}{section.5}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.1}PCA Visualizations (Eigenfaces and Reconstructions)}{4}{subsection.5.1}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {1}{\ignorespaces Top eigenfaces (principal components) learned from the training set.}}{4}{figure.caption.1}\protected@file@percent }
+\providecommand*\caption@xref[2]{\@setref\relax\@undefined{#1}}
+\newlabel{fig:eigenfaces}{{1}{4}{Top eigenfaces (principal components) learned from the training set}{figure.caption.1}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {2}{\ignorespaces Example reconstructions from the PCA subspace for a chosen $\alpha $. Larger $\alpha $ typically improves reconstruction quality because more components are retained.}}{4}{figure.caption.2}\protected@file@percent }
+\newlabel{fig:recon}{{2}{4}{Example reconstructions from the PCA subspace for a chosen $\alpha $. Larger $\alpha $ typically improves reconstruction quality because more components are retained}{figure.caption.2}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.2}K-Means: Accuracy vs $K$ and $\alpha $}{5}{subsection.5.2}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {3}{\ignorespaces K-Means test accuracy vs number of clusters $K$, with one curve per $\alpha $.}}{5}{figure.caption.3}\protected@file@percent }
+\newlabel{fig:kmeans-k}{{3}{5}{K-Means test accuracy vs number of clusters $K$, with one curve per $\alpha $}{figure.caption.3}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {4}{\ignorespaces K-Means test accuracy vs variance threshold $\alpha $, with one curve per $K$.}}{5}{figure.caption.4}\protected@file@percent }
+\newlabel{fig:kmeans-alpha}{{4}{5}{K-Means test accuracy vs variance threshold $\alpha $, with one curve per $K$}{figure.caption.4}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.3}GMM: Accuracy vs $K$ and $\alpha $}{6}{subsection.5.3}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {5}{\ignorespaces GMM test accuracy vs $K$ (one curve per $\alpha $).}}{6}{figure.caption.5}\protected@file@percent }
+\newlabel{fig:gmm-k}{{5}{6}{GMM test accuracy vs $K$ (one curve per $\alpha $)}{figure.caption.5}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {6}{\ignorespaces GMM test accuracy vs $\alpha $ (one curve per $K$).}}{6}{figure.caption.6}\protected@file@percent }
+\newlabel{fig:gmm-alpha}{{6}{6}{GMM test accuracy vs $\alpha $ (one curve per $K$)}{figure.caption.6}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.4}Confusion Matrices for Best Configurations}{6}{subsection.5.4}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {7}{\ignorespaces Test-set confusion matrices for the best configuration selected on training accuracy.}}{6}{figure.caption.7}\protected@file@percent }
+\newlabel{fig:cms}{{7}{6}{Test-set confusion matrices for the best configuration selected on training accuracy}{figure.caption.7}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.5}Relationship Between $\alpha $ and Classification Accuracy}{7}{subsection.5.5}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.6}Relationship Between $K$ and Classification Accuracy}{7}{subsection.5.6}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {6}Model Comparison: K-Means vs GMM}{7}{section.6}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {7}Bonus: Autoencoder Dimensionality Reduction}{7}{section.7}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {7.1}Architecture and Training}{7}{subsection.7.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {7.2}Reconstruction Quality}{8}{subsection.7.2}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {8}{\ignorespaces Reconstructed faces from the autoencoder ($z=115$, $\alpha =0.95$). Each image corresponds to a different subject from the training set.}}{8}{figure.caption.8}\protected@file@percent }
+\newlabel{fig:ae-grid}{{8}{8}{Reconstructed faces from the autoencoder ($z=115$, $\alpha =0.95$). Each image corresponds to a different subject from the training set}{figure.caption.8}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {9}{\ignorespaces Original (top row) vs.\ autoencoder-reconstructed (bottom row) faces for five subjects at $\alpha =0.95$. The reconstructions preserve identity-relevant structure while exhibiting mild smoothing.}}{9}{figure.caption.9}\protected@file@percent }
+\newlabel{fig:ae-sidebyside}{{9}{9}{Original (top row) vs.\ autoencoder-reconstructed (bottom row) faces for five subjects at $\alpha =0.95$. The reconstructions preserve identity-relevant structure while exhibiting mild smoothing}{figure.caption.9}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {7.3}K-Means Clustering on Autoencoder Features}{9}{subsection.7.3}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {1}{\ignorespaces K-Means test accuracy and weighted F1 on autoencoder features. Best configuration highlighted in bold.}}{9}{table.caption.10}\protected@file@percent }
+\newlabel{tab:km-ae}{{1}{9}{K-Means test accuracy and weighted F1 on autoencoder features. Best configuration highlighted in bold}{table.caption.10}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {10}{\ignorespaces K-Means on autoencoder features: test accuracy vs $K$ (left) and vs $\alpha $ (right).}}{10}{figure.caption.11}\protected@file@percent }
+\newlabel{fig:km-ae-acc}{{10}{10}{K-Means on autoencoder features: test accuracy vs $K$ (left) and vs $\alpha $ (right)}{figure.caption.11}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {11}{\ignorespaces Confusion matrix for the best K-Means configuration on autoencoder features.}}{10}{figure.caption.12}\protected@file@percent }
+\newlabel{fig:cm-km-ae}{{11}{10}{Confusion matrix for the best K-Means configuration on autoencoder features}{figure.caption.12}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {7.4}GMM Clustering on Autoencoder Features}{10}{subsection.7.4}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {2}{\ignorespaces GMM test accuracy and weighted F1 on autoencoder features. Best configuration highlighted in bold.}}{11}{table.caption.13}\protected@file@percent }
+\newlabel{tab:gmm-ae}{{2}{11}{GMM test accuracy and weighted F1 on autoencoder features. Best configuration highlighted in bold}{table.caption.13}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {12}{\ignorespaces GMM on autoencoder features: test accuracy vs $K$ (left) and vs $\alpha $ (right).}}{11}{figure.caption.14}\protected@file@percent }
+\newlabel{fig:gmm-ae-acc}{{12}{11}{GMM on autoencoder features: test accuracy vs $K$ (left) and vs $\alpha $ (right)}{figure.caption.14}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {13}{\ignorespaces Confusion matrix for the best GMM configuration on autoencoder features.}}{12}{figure.caption.15}\protected@file@percent }
+\newlabel{fig:cm-gmm-ae}{{13}{12}{Confusion matrix for the best GMM configuration on autoencoder features}{figure.caption.15}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {7.5}PCA vs.\ Autoencoder: Final Comparison}{12}{subsection.7.5}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {3}{\ignorespaces Best test accuracy and weighted F1 achieved by each method.}}{12}{table.caption.16}\protected@file@percent }
+\newlabel{tab:final-cmp}{{3}{12}{Best test accuracy and weighted F1 achieved by each method}{table.caption.16}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {14}{\ignorespaces Bar chart comparing test accuracy and weighted F1 across all three method combinations.}}{12}{figure.caption.17}\protected@file@percent }
+\newlabel{fig:final-bar}{{14}{12}{Bar chart comparing test accuracy and weighted F1 across all three method combinations}{figure.caption.17}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {8}Conclusion}{13}{section.8}\protected@file@percent }
+\gdef \@abspage@last{13}

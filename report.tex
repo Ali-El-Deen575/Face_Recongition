@@ -232,17 +232,225 @@ Since the dataset contains multiple subjects (often 40 subjects in the classic O
     \item Confusion matrices: which subjects are systematically confused.
 \end{enumerate}
 
-\section{Conclusion}
-PCA provides an effective compact representation for face images. The variance threshold $\alpha$ controls the retained information and strongly affects clustering separability. The number of clusters $K$ also impacts performance, with best results usually around the true number of identities. Overall, GMM can outperform K-Means when class clusters have different covariances, but the final conclusion should be taken from the reported metrics and plots.
+% ─────────────────────────────────────────────────────────────────
+\section{Bonus: Autoencoder Dimensionality Reduction}
+% ─────────────────────────────────────────────────────────────────
 
-\section*{How to Produce the Figures}
-Export the following plots from your notebook into \texttt{figures/} with these filenames:
+\subsection{Architecture and Training}
+
+As a bonus experiment, we replace PCA with a deep autoencoder for dimensionality reduction.
+The autoencoder is built with Keras/TensorFlow and follows the architecture:
+
+\begin{center}
+\textbf{Encoder:} $10304 \xrightarrow{\text{ReLU}} 1024 \xrightarrow{\text{ReLU}} 512 \xrightarrow{\text{ReLU}} z$
+\quad
+\textbf{Decoder:} $z \xrightarrow{\text{ReLU}} 512 \xrightarrow{\text{ReLU}} 1024 \xrightarrow{\text{Sigmoid}} 10304$
+\end{center}
+
+\noindent
+To allow a fair comparison against PCA, we train four separate autoencoders, each with a
+bottleneck dimension $z$ matching the number of PCA components retained at each variance
+threshold $\alpha$:
+
+\begin{center}
+\begin{tabular}{cc}
+\toprule
+$\alpha$ & Encoding dim $z$ \\
+\midrule
+0.80 & 36 \\
+0.85 & 52 \\
+0.90 & 76 \\
+0.95 & 115 \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\noindent
+All models are trained for 50 epochs with Adam (lr = 0.001), batch size 16, and MSE loss.
+Inputs are normalized to $[0,1]$ before training.
+
+\subsection{Reconstruction Quality}
+
+Figures~\ref{fig:ae-grid} and \ref{fig:ae-sidebyside} show the reconstruction output of
+the $\alpha=0.95$ autoencoder ($z=115$). Unlike the mean-face collapse observed with a
+naive single-layer autoencoder, the deep architecture with ReLU activations and the Adam
+optimizer successfully recovers subject-specific facial features, hair texture, and
+accessories such as glasses.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.95\linewidth]{figures/ae_reconstructed_grid.png}
+    \caption{Reconstructed faces from the autoencoder ($z=115$, $\alpha=0.95$). Each
+             image corresponds to a different subject from the training set.}
+    \label{fig:ae-grid}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.95\linewidth]{figures/ae_original_vs_reconstructed.png}
+    \caption{Original (top row) vs.\ autoencoder-reconstructed (bottom row) faces for
+             five subjects at $\alpha=0.95$. The reconstructions preserve identity-relevant
+             structure while exhibiting mild smoothing.}
+    \label{fig:ae-sidebyside}
+\end{figure}
+
+\subsection{K-Means Clustering on Autoencoder Features}
+
+We apply K-Means ($K \in \{20, 40, 60\}$) to the encoded representations from each
+autoencoder. Table~\ref{tab:km-ae} reports results across all $(\alpha, K)$ combinations.
+
+\begin{table}[H]
+\centering
+\caption{K-Means test accuracy and weighted F1 on autoencoder features.
+         Best configuration highlighted in bold.}
+\label{tab:km-ae}
+\begin{tabular}{cccccc}
+\toprule
+$\alpha$ & $K$ & Dim & Train Acc & Test Acc & Test F1-W \\
+\midrule
+0.80 & 20 & 36 & 0.4650 & 0.3650 & 0.2533 \\
+0.80 & 40 & 36 & 0.6250 & 0.5150 & 0.4802 \\
+0.80 & 60 & 36 & 0.7350 & 0.5850 & 0.5617 \\
+0.85 & 20 & 52 & 0.4200 & 0.3350 & 0.2296 \\
+0.85 & 40 & 52 & 0.6300 & 0.5150 & 0.4419 \\
+0.85 & 60 & 52 & 0.7700 & 0.5650 & 0.5428 \\
+0.90 & 20 & 76 & 0.4300 & 0.3650 & 0.2497 \\
+0.90 & 40 & 76 & 0.6050 & 0.5050 & 0.4519 \\
+0.90 & 60 & 76 & 0.7300 & 0.5500 & 0.5214 \\
+0.95 & 20 & 115 & 0.4500 & 0.3850 & 0.2738 \\
+0.95 & 40 & 115 & 0.6350 & 0.4850 & 0.4136 \\
+\textbf{0.95} & \textbf{60} & \textbf{115} & \textbf{0.7550} & \textbf{0.6300} & \textbf{0.6037} \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\noindent
+\textbf{Effect of $K$:} Accuracy increases consistently as $K$ grows from 20 to 60 across
+all $\alpha$ values. Larger $K$ allows finer-grained cluster assignment, reducing the
+chance that multiple subjects are merged into the same cluster.
+
+\noindent
+\textbf{Effect of $\alpha$:} The best configuration is $\alpha=0.95$, $K=60$, achieving
+63.0\% test accuracy and 0.604 weighted F1. Higher $\alpha$ generally improves accuracy
+here, with the largest bottleneck ($z=115$) providing the most discriminative features.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.95\linewidth]{figures/km_ae_acc.png}
+    \caption{K-Means on autoencoder features: test accuracy vs $K$ (left) and vs $\alpha$ (right).}
+    \label{fig:km-ae-acc}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.55\linewidth]{figures/cm_km_ae.png}
+    \caption{Confusion matrix for the best K-Means configuration on autoencoder features.}
+    \label{fig:cm-km-ae}
+\end{figure}
+
+\subsection{GMM Clustering on Autoencoder Features}
+
+Table~\ref{tab:gmm-ae} shows GMM results. GMM with autoencoder features is more sensitive
+to $K$ than K-Means, and at $K=20$ and $K=40$ the performance drops significantly,
+suggesting initialization sensitivity in higher-dimensional latent spaces.
+
+\begin{table}[H]
+\centering
+\caption{GMM test accuracy and weighted F1 on autoencoder features.
+         Best configuration highlighted in bold.}
+\label{tab:gmm-ae}
+\begin{tabular}{cccccc}
+\toprule
+$\alpha$ & $K$ & Dim & Train Acc & Test Acc & Test F1-W \\
+\midrule
+0.80 & 20 & 36 & 0.4000 & 0.1550 & 0.0613 \\
+0.80 & 40 & 36 & 0.4950 & 0.1900 & 0.1326 \\
+0.80 & 60 & 36 & 0.6700 & 0.2800 & 0.2769 \\
+0.85 & 20 & 52 & 0.3850 & 0.1200 & 0.0556 \\
+0.85 & 40 & 52 & 0.5000 & 0.2900 & 0.2527 \\
+0.85 & 60 & 52 & 0.6800 & 0.3450 & 0.2968 \\
+0.90 & 20 & 76 & 0.3950 & 0.3400 & 0.2251 \\
+0.90 & 40 & 76 & 0.5000 & 0.3850 & 0.3379 \\
+0.90 & 60 & 76 & 0.6700 & 0.5500 & 0.4972 \\
+0.95 & 20 & 115 & 0.3950 & 0.3300 & 0.2118 \\
+0.95 & 40 & 115 & 0.5300 & 0.4000 & 0.3228 \\
+\textbf{0.95} & \textbf{60} & \textbf{115} & \textbf{0.6900} & \textbf{0.5800} & \textbf{0.5340} \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.95\linewidth]{figures/gmm_ae_acc.png}
+    \caption{GMM on autoencoder features: test accuracy vs $K$ (left) and vs $\alpha$ (right).}
+    \label{fig:gmm-ae-acc}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.55\linewidth]{figures/cm_gmm_ae.png}
+    \caption{Confusion matrix for the best GMM configuration on autoencoder features.}
+    \label{fig:cm-gmm-ae}
+\end{figure}
+
+\subsection{PCA vs.\ Autoencoder: Final Comparison}
+
+Table~\ref{tab:final-cmp} and Figure~\ref{fig:final-bar} summarise the best configuration
+found for each method combination.
+
+\begin{table}[H]
+\centering
+\caption{Best test accuracy and weighted F1 achieved by each method.}
+\label{tab:final-cmp}
+\begin{tabular}{lcccc}
+\toprule
+Method & Best $\alpha$ & Best $K$ & Test Accuracy & Test F1-W \\
+\midrule
+\textbf{K-Means on PCA} & \textbf{0.80} & \textbf{60} & \textbf{0.7900} & \textbf{0.7753} \\
+K-Means on AE           & 0.95          & 60          & 0.6300          & 0.6037 \\
+GMM on AE               & 0.95          & 60          & 0.5800          & 0.5340 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.75\linewidth]{figures/final_comparison.png}
+    \caption{Bar chart comparing test accuracy and weighted F1 across all three method combinations.}
+    \label{fig:final-bar}
+\end{figure}
+
+\noindent
+\textbf{Key findings:}
 \begin{itemize}
-    \item \texttt{eigenfaces.png}, \texttt{reconstructions.png}
-    \item \texttt{kmeans\_acc\_vs\_k.png}, \texttt{kmeans\_acc\_vs\_alpha.png}
-    \item \texttt{gmm\_acc\_vs\_k.png}, \texttt{gmm\_acc\_vs\_alpha.png}
-    \item \texttt{cm\_kmeans.png}, \texttt{cm\_gmm.png}
+    \item \textbf{PCA + K-Means dominates} with 79\% test accuracy and 0.775 F1, outperforming
+          both autoencoder-based approaches by a significant margin.
+    \item \textbf{K-Means consistently outperforms GMM} regardless of the feature extractor.
+          On autoencoder features, the gap is 5 percentage points (63.0\% vs 58.0\%).
+    \item \textbf{The autoencoder produces qualitatively better reconstructions} than PCA
+          (sharp, subject-specific images), but its encoded features are less linearly separable
+          for K-Means/GMM. PCA maximises variance along globally orthogonal directions,
+          which naturally separates clusters; the autoencoder optimises reconstruction loss
+          rather than cluster separability.
+    \item \textbf{Data scarcity limits the autoencoder}: with only 200 training images,
+          the non-linear model has limited statistical support, whereas PCA always produces
+          an exact optimal linear subspace.
 \end{itemize}
+
+% ─────────────────────────────────────────────────────────────────
+\section{Conclusion}
+% ─────────────────────────────────────────────────────────────────
+
+PCA provides an effective compact representation for face images. The variance threshold
+$\alpha$ controls the retained information and strongly affects clustering separability.
+The number of clusters $K$ also impacts performance, with best results usually around the
+true number of identities (40 subjects).
+
+In the bonus autoencoder experiment, the deep non-linear encoder produces visually
+superior reconstructions, but PCA features remain more amenable to unsupervised clustering
+on this small dataset. K-Means consistently outperforms GMM across both dimensionality
+reduction methods. Future work could explore supervised fine-tuning of the autoencoder
+or contrastive learning objectives to improve cluster separability.
 
 \end{document}
 
